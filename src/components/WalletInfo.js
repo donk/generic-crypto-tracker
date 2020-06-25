@@ -100,6 +100,7 @@ const WalletInfo = (props) => {
         <NumberFormat fixedDecimalScale={true} value={usdTotal} displayType={'text'} thousandSeparator={true} prefix={'$'} />
         </OverviewCard>
       </Flexxy>
+      {props.children}
       <WalletHistory collapsed={props.collapsed} transactions={transactions} addresses={addresses}/>
     </>
   )

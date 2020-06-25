@@ -4,10 +4,11 @@ import NumberFormat from 'react-number-format';
 
   const Info = styled.div`
     text-align:center;
-    font-size:0.85em;
+    font-size:0.9em;
     margin:5px 10px;
     .title{
       font-size:0.7em;
+      margin-bottom:5px;
       color:rgba(255,255,255,0.5);
     }
   `;

@@ -9,7 +9,7 @@ const Title = styled.div`
   text-transform:uppercase;
   text-align:left;
   margin-bottom:5px;
-  font-size:0.8em;
+  font-size:0.9em;
   color:rgba(100,100,160,1);
 `;
 
