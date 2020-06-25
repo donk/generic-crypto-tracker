@@ -53,7 +53,6 @@ const CryptoInfo = (props) => {
       axios.get(`https://api.coingecko.com/api/v3/coins/${props.coin}?tickers=false&market_data=true&community_data=true&developer_data=false&sparkline=false`)
       .then((result) => {
         console.log(result.data);
-        setDelay(60000);
         const data = result.data;
         const formattedInfo = {
           thumb: data.image.thumb,
@@ -76,9 +75,12 @@ const CryptoInfo = (props) => {
           cur_price: formatCurrency(data.market_data.current_price.usd),
           symbol: data.symbol
         }
+        setDelay(60000);
         setCryptoData(formattedInfo);
         setCurPrice(formattedInfo.cur_price);
-      });
+      }).catch((e) => {
+        setDelay(1000000);
+      })
     },delay);
 
     return () => clearInterval(timer);

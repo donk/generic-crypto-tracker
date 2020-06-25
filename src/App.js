@@ -22,28 +22,29 @@ const defaultTrackers = {
       value:'3NbqHs4mf3JXJN3owsr8A9Z1r1z4Dgnm9t',
       hidden:true
     }
-  ]
+  ],
+  last:0
+}
+
+const def = {
+  coins:[],
+  wallets:[]
 }
 
 const App = () => {
-  const localCoin = JSON.parse(localStorage.getItem('coin1'));
-  const localWallet = JSON.parse(localStorage.getItem('wallet1'));
-
-  const [trackedCoins,setTrackedCoins] = useState(
-    localCoin || defaultTrackers.coins
-  )
-  const [trackedWallets,setTrackedWallets] = useState(
-    localWallet || defaultTrackers.wallets
-  )
+  const localc = JSON.parse(localStorage.getItem('coins1'));
+  const localw = JSON.parse(localStorage.getItem('wallets1'))
+  const [coins,setCoins] = useState(localc || def.coins);
+  const [wallets,setWallets] = useState(localw || def.wallets);
 
   let addTracker = (type,value) => {
     let tmp = {value:value,hidden:false};
     if (type === "coins"){
-      localStorage.setItem('coin1',JSON.stringify([...trackedWallets,tmp]))
-      setTrackedCoins([...trackedCoins,tmp]);
+      localStorage.setItem('coins1',JSON.stringify([...coins,tmp]));
+      return setCoins([...coins,tmp])
     }else{
-      localStorage.setItem('wallet1',JSON.stringify([...trackedWallets,tmp]))
-      setTrackedWallets([...trackedWallets,tmp]);
+      localStorage.setItem('wallets1',JSON.stringify([...wallets,tmp]));
+      return setWallets([...wallets,tmp]);
     }
   }
 
@@ -53,11 +54,14 @@ const App = () => {
       <div className="Content">
         <div className="Navigation">
           <div onClick={() => addTracker('coins','dogecoin')} >
-            Do the thing {trackedCoins.length};
+            Do the thing {coins.length};
+          </div>
+          <div onClick={() => addTracker('wallets','3PLLdazCQE4EoNx3CkV6qZ4nxTUqBDBdiB')} >
+            Do the thing {wallets.length};
           </div>
         </div>
         <div className="Cards">
-          {trackedCoins.map((v,i) => {
+          {coins.map((v,i) => {
             return(
             <Card key={v.value}>
               <CryptoPanel hidden={v.hidden} coin={v.value} />
@@ -65,7 +69,7 @@ const App = () => {
             )
           })}
 
-          {trackedWallets.map((v,i) => {
+          {wallets.map((v,i) => {
             return(
             <Card key={v.value}>
               <CryptoPanel hidden={v.hidden} wallet={v.value} />

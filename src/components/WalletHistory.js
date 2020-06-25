@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import styled from 'styled-components';
+import moment from 'moment';
 
 const Transactions = styled.div`
   width:100%;
@@ -12,11 +13,11 @@ const Row = styled.div`
   padding:5px 5px;
   border-bottom:#ccc 1px solid;
   background-color:#2a2a2a;
-  align-items: center;
 `;
 
 const Col = styled.div`
   font-size:0.8em;
+  padding:0 10px;
   flex-grow:${props => props.grow ? '1' : '0'};
   text-align:${props => props.grow ? 'center' : 'left'};
 `;
@@ -38,6 +39,8 @@ const HistoryItem = (props) => {
   const [fromTotal,setFromTotal] = useState(0);
   const [toTotal,setToTotal] = useState(0);
 
+  let time = moment(props.tx.time*1000).format('MMM Mo YYYY h:mm:ss a')
+
   useEffect(() => {
     let from = 0;
     let to = 0;
@@ -54,9 +57,13 @@ const HistoryItem = (props) => {
   return(
     <Row>
       <Col>
-      <Label>Sending Addresses</Label>
+        <Label>Date</Label>
+        {time}
+      </Col>
+      <Col>
+        <Label>Sending Addresses</Label>
         {props.tx.inputs.map((v,i) =>{
-          return (
+            return (
             <AddressLink key={v.prev_out.script+i} value={v.prev_out.addr} color={props.addresses.indexOf(v.prev_out.addr) < 0 ? 'white' : 'rgb(168, 168, 225)' } />
           )
         })}
