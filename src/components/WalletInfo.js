@@ -30,7 +30,7 @@ const Overview = styled.div`
 `;
 
 const Value = styled.div`
-  font-size:2.5em;
+  font-size:2em;
   color:white;
   margin-top:5px;
 `;
@@ -78,6 +78,7 @@ const WalletInfo = (props) => {
     setAddresses(props.wallet.split('|'));
     axios.get(`http://localhost:3001/wallet/${props.wallet}?confirmations=6`)
     .then((result) => {
+      console.log(result.data);
       getTotals(result.data.addresses);
       setTransactions(result.data.txs);
     });
@@ -99,7 +100,7 @@ const WalletInfo = (props) => {
         <NumberFormat fixedDecimalScale={true} value={usdTotal} displayType={'text'} thousandSeparator={true} prefix={'$'} />
         </OverviewCard>
       </Flexxy>
-      <WalletHistory transactions={transactions} addresses={addresses}/>
+      <WalletHistory collapsed={props.collapsed} transactions={transactions} addresses={addresses}/>
     </>
   )
 }

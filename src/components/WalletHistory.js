@@ -9,15 +9,19 @@ const Transactions = styled.table`
     margin-bottom:10px;
   }
   tbody{
-    max-height:40px;
-    font-size:0.8em;
-
+    max-height:400px;
+    font-size:0.7em;
+    display:block;
+    overflow-y:auto;
+    margin-top:10px;
     tr{
       border-bottom:#ccc 1px solid;
+      display:table;
+      width:100%;
     }
 
     td{
-      padding:5px 0;
+      table-layout:fixed;
     }
   }
 `;
@@ -54,16 +58,18 @@ const HistoryItem = (props) => {
 const WalletHistory = (props) => {
 
   return(
-    <Transactions>
-      <thead>
-        <h3>Transactions</h3>
-      </thead>
-      <tbody>
-        {props.transactions.map((tx,i) => {
-          return <HistoryItem key={i} tx={tx} addresses={props.addresses}/>
-        })}
-      </tbody>
-    </Transactions>
+    <div className={`collapsable ${props.collapsed ? '' : 'collapsed' }`}>
+      <Transactions>
+        <thead>
+        Transactions
+        </thead>
+        <tbody>
+          {props.transactions.map((tx,i) => {
+            return <HistoryItem key={i} tx={tx} addresses={props.addresses}/>
+          })}
+        </tbody>
+      </Transactions>
+      </div>
   )
 };
 
