@@ -15,7 +15,7 @@ function App() {
         <CryptoPanel coin="ethereum" />
       </Card>
       <Card>
-        <CryptoPanel coin="ripple" />
+        <CryptoPanel wallet="3PLLdazCQE4EoNx3CkV6qZ4nxTUqBDBdiB|39Jb9RroYYv8Z23kKgPSeMmpHFSKuweF66" />
       </Card>
     </div>
   );

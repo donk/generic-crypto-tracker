@@ -12,7 +12,7 @@ const CardContainer = styled.div`
 
 const Card = (props) => {
   return(
-    <CardContainer>
+    <CardContainer style={{width:props.width}}>
       {props.children}
     </CardContainer>
   )
