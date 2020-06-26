@@ -40,17 +40,19 @@ const InfoFrame = styled.div`
 `;
 
 const formatCurrency = (num) => {
+  if (!num) return;
   return num.toFixed(6).replace(/([0-9]+(\.[0-9]+[1-9])?)(\.?0+$)/,'$1');
 }
 
 const CryptoInfo = (props) => {
   const [curPrice, setCurPrice] = useState ("*.**");
   const [cryptoData,setCryptoData] = useState({change_24:{}});
-  const [delay,setDelay] = useState(100);
+  const [delay,setDelay] = useState(1000);
 
   useEffect(() => {
+    setDelay(60000);
     const timer = setInterval(() => {
-      axios.get(`https://api.coingecko.com/api/v3/coins/${props.coin}?tickers=false&market_data=true&community_data=true&developer_data=false&sparkline=false`)
+      axios.get(`https://api.coingecko.com/api/v3/coins/${props.coin}?tickers=false&market_data=true&community_data=true&developer_data=true&sparkline=false`)
       .then((result) => {
         console.log(result.data);
         const data = result.data;
@@ -75,15 +77,18 @@ const CryptoInfo = (props) => {
           cur_price: formatCurrency(data.market_data.current_price.usd),
           symbol: data.symbol
         }
-        setDelay(60000);
         setCryptoData(formattedInfo);
         setCurPrice(formattedInfo.cur_price);
       }).catch((e) => {
-        setDelay(1000000);
+        console.log(e.message);
+        setDelay(100000);
       })
     },delay);
 
-    return () => clearInterval(timer);
+    return () => {
+      setDelay(5000);
+      clearInterval(timer);
+    };
   },[curPrice])
 
   return(

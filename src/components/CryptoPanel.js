@@ -25,8 +25,8 @@ const Expand = styled.div`
 const CryptoCard = (props) => {
   const [collapsed,setCollapsed] = useState(!props.hidden);
 
-  const doClick = () => {
-    console.log(collapsed);
+  const doClick = (e) => {
+    props.toggleCollapse();
     setCollapsed(!collapsed);
   }
 

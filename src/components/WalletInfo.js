@@ -69,6 +69,8 @@ const WalletInfo = (props) => {
     })
     axios.get('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd').then((prices) => {
       setUsdTotal((prices.data.bitcoin.usd * (total/100000000)).toFixed(2));
+    }).catch((e) => {
+      console.log(e.message);
     })
     //satoooooshi
     setTotalCoins(total/100000000);
@@ -81,7 +83,9 @@ const WalletInfo = (props) => {
       console.log(result.data);
       getTotals(result.data.addresses);
       setTransactions(result.data.txs);
-    });
+    }).catch((e) => {
+      console.log(e.message);
+    })
   },[])
 
   return(

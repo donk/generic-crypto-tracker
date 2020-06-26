@@ -13,6 +13,24 @@ body{
   margin:0 auto;
 }
 
+.Navigation{
+  display:flex;
+}
+
+.Navigation .item{
+  width:50%;
+  margin:20px;
+}
+
+.Navigation .item .flexxy div:first-child{
+  width:100%;
+}
+
+.flexxy{
+  display:flex;
+}
+
+
 .collapsable{
   transition:max-height 0.5s;
   max-height:200px;

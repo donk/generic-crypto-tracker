@@ -10,7 +10,7 @@ import moment from 'moment';
 
 const CryptoChart = (props) => {
   const [chartData,setChartData] = useState({});
-  const [delay,setDelay] = useState(100);
+  const [delay,setDelay] = useState(1000);
 
   const chartOpts = {
     pointRadius: 0,
@@ -20,6 +20,7 @@ const CryptoChart = (props) => {
   }
 
   const getChart = () => {
+    setDelay(60000);
     axios.get(`https://api.coingecko.com/api/v3/coins/${props.coin}/market_chart?vs_currency=usd&days=1`)
       .then((result) => {
         const formatted = result.data.prices.filter((price,index) => {
@@ -29,9 +30,11 @@ const CryptoChart = (props) => {
           price[0] = moment(price[0]).toDate();
           return price;
         });
-        setDelay(60000);
         setChartData(formatted);
-      });
+      }).catch((e) => {
+        console.log(e.message);
+        setDelay(5000);
+      })
   }
 
   useEffect(() => {
