@@ -37,7 +37,7 @@ const CryptoChart = props => {
       setChartData(formatted);
     } catch (e) {
       console.log(e.message);
-      setDelay(5000);
+      setDelay(15000);
     }
   }, [props.coin]);
 
@@ -50,7 +50,7 @@ const CryptoChart = props => {
   }, [chartData, delay, tick]);
 
   return (
-    <div className={`collapsable ${props.collapsed ? '' : 'collapsed'}`}>
+    <div className={`collapsable ${props.collapsed ? 'collapsed' : ''}`}>
       <LineChart
         prefix="$"
         thousands=","

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react'; // Usually we use linters to space this out more
 import './App.css';
 
+import useLocalStorage from './hooks/LocalStorage';
+
 // Moved to constants folder, uppercase
 import COIN_LIST from './constants/CoinList.json';
 
@@ -45,40 +47,28 @@ const updateArray = (arr, item, index) => {
 };
 
 const App = () => {
-  // This would be a good use case to make your own useLocalStorage hook
-  // Might rename these to use camelCase (ex: localC, but pref localCoin or similar)
-  const localc = JSON.parse(localStorage.getItem(localStores.coin));
-  const localw = JSON.parse(localStorage.getItem(localStores.wallet));
-  const locala = JSON.parse(localStorage.getItem(localStores.all));
-
-  const [coins, setCoins] = useState(localc || DEFAULTS.coins);
-  const [wallets, setWallets] = useState(localw || DEFAULTS.wallets);
-  const [coinSel, setCoinSel] = useState(''); // Try and use the full name here ex: selectedCoin, setSelectedCoin
-  const [allCoins, setAllCoins] = useState(locala || null);
+  const [coins, setCoins] = useLocalStorage(localStores.coin, DEFAULTS.coins);
+  const [wallets, setWallets] = useLocalStorage(localStores.wallet, DEFAULTS.wallets);
+  const [allCoins, setAllCoins] = useLocalStorage(localStores.all, null);
+  const [selectedCoin, setSelectedCoin] = useState(''); // Try and use the full name here ex: selectedCoin, setSelectedCoin
 
   // TODO: Clean these up; Merge into one function
   const addTracker = (type, value) => {
     if (!value) return; // !'' actually returns true so no need to check if empty string
-
     const update = { value, hidden: false };
-    setCoinSel(null);
+    setSelectedCoin(null);
     if (type === 'coins') {
-      // could also be part of your localStorage hook
-      localStorage.setItem(localStores.coin, JSON.stringify([...coins, update]));
       return setCoins([...coins, update]);
     } else {
-      localStorage.setItem(localStores.wallet, JSON.stringify([...wallets, update]));
       return setWallets([...wallets, update]);
     }
   };
 
   const addAddress = value => {
     if (!value) return; // Same here !''
-
     // try and use a better name here
-    const update = { value, hidden: false }; // const > let
-    localStorage.setItem(localStores.wallet, JSON.stringify([...wallets, update]));
-    return setWallets([...wallets, update]);
+    const newWallet = { value, hidden: false }; // const > let
+    return setWallets([...wallets, newWallet]);
   };
 
   const updateCollapse = (type, index) => {
@@ -91,29 +81,23 @@ const App = () => {
 
     if (type === 'coins') {
       const update = updateArray(coins, { hidden: !coins[index].hidden }, index);
-      localStorage.setItem(localStores.coin, JSON.stringify(update));
       return setCoins(update);
     } else {
       const update = updateArray(wallets, { hidden: !wallets[index].hidden }, index);
-      localStorage.setItem(localStores.wallet, JSON.stringify(update));
       return setWallets(update);
     }
   };
 
   // You can probably not have this at all since you're just calling it directly
-  const changeCoin = value => {
-    setCoinSel(value);
-  };
+
 
   const removeCard = (type, index) => {
     // Same issue here with x = objOrArr
     if (type === 'coins') {
       const update = coins.filter((_, i) => i !== index);
-      localStorage.setItem(localStores.coin, JSON.stringify(update));
       return setCoins([...update]);
     } else {
       const update = wallets.filter((_, i) => i !== index);
-      localStorage.setItem(localStores.wallet, JSON.stringify(update));
       return setWallets([...update]);
     }
   };
@@ -136,7 +120,6 @@ const App = () => {
     }*/
   }, []);
 
-  console.log(coins);
 
   //TODO: Clean the AddAddress/AddCoin components up
   return (
@@ -145,7 +128,7 @@ const App = () => {
       <div className="Content">
         <div className="Navigation">
           <div className="item">
-            <AddCoin coinSel={coinSel} changeCoin={changeCoin} addTracker={addTracker} allCoins={allCoins} />
+            <AddCoin coinSel={selectedCoin} changeCoin={setSelectedCoin} addTracker={addTracker} allCoins={allCoins} />
           </div>
           <div className="item">
             <AddAddress addAddress={addAddress} />

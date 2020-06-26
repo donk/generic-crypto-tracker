@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 
 import CryptoInfo from './CryptoInfo';
@@ -37,39 +37,27 @@ const Delete = styled.div`
 `;
 
 const CryptoCard = props => {
-  const [collapsed, setCollapsed] = useState(!props.hidden);
-
-  const onClick = () => {
-    // What's the reasoning for toggleCollapse here?
-    props.toggleCollapse();
-    setCollapsed(!collapsed);
-  };
-
-  const onDelete = () => {
-    props.deleteCard();
-  };
-
   return (
     <div>
       {props.coin && (
         <>
           <CryptoInfo coin={props.coin} />
           <div>
-            <Expand onClick={onClick}>{collapsed ? 'Hide Chart' : 'Show Chart'}</Expand>
+            <Expand onClick={props.toggleCollapse}>{props.hidden ? 'Show Chart' : 'Hide Chart'}</Expand>
           </div>
-          <CryptoChart collapsed={collapsed} coin={props.coin} />
+          <CryptoChart collapsed={props.hidden} coin={props.coin} />
         </>
       )}
 
       {props.wallet && (
         <>
-          <WalletInfo collapsed={collapsed} wallet={props.wallet}>
-            <Expand onClick={onClick}>{collapsed ? 'Hide Transactions' : 'Show Transactions'}</Expand>
+          <WalletInfo collapsed={props.hidden} wallet={props.wallet}>
+            <Expand onClick={props.toggleCollapse}>{props.hidden ? 'Show Transactions' : 'Hide Transactions'}</Expand>
           </WalletInfo>
         </>
       )}
       <Delete>
-        <div onClick={onDelete}>REMOVE</div>
+        <div onClick={props.deleteCard}>REMOVE</div>
       </Delete>
     </div>
   );
