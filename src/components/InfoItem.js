@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import NumberFormat from 'react-number-format';
+import ScaleLoader from "react-spinners/ScaleLoader";
 
   const Info = styled.div`
     text-align:center;
@@ -17,15 +18,20 @@ const InfoItem = (props) => {
   return(
     <Info>
       <div className="title">{props.title}</div>
-      { props.price && 
-        <NumberFormat fixedDecimalScale={true} value={props.price} displayType={'text'} thousandSeparator={true} prefix={'$'} />
-      }
 
-      { props.split && <span> {props.split} </span>}
-      
+        <ScaleLoader
+          height={15}
+          color={"white"}
+          loading={props.loading}
+        />
+
+      { props.price && 
+        <NumberFormat value={props.price} displayType={'text'} thousandSeparator={true} prefix={'$'} />
+      }
       {
-        props.percent &&
-        <span>{props.percent}%</span>
+        props.split && props.percent &&
+        <><span> {props.split} </span>
+        <span>{props.percent}%</span></>
       }
     </Info>
   )

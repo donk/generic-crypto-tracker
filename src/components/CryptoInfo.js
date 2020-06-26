@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import styled from 'styled-components';
-
+import BeatLoader from "react-spinners/BeatLoader";
+import NumberFormat from 'react-number-format';
 
 import InfoItem from './InfoItem';
 
@@ -45,9 +46,10 @@ const formatCurrency = (num) => {
 }
 
 const CryptoInfo = (props) => {
-  const [curPrice, setCurPrice] = useState ("*.**");
+  const [curPrice, setCurPrice] = useState ("");
   const [cryptoData,setCryptoData] = useState({change_24:{}});
   const [delay,setDelay] = useState(1000);
+  const [loading,setLoading] = useState(true);
 
   useEffect(() => {
     setDelay(60000);
@@ -79,6 +81,7 @@ const CryptoInfo = (props) => {
         }
         setCryptoData(formattedInfo);
         setCurPrice(formattedInfo.cur_price);
+        setLoading(false);
       }).catch((e) => {
         console.log(e.message);
         setDelay(100000);
@@ -91,6 +94,8 @@ const CryptoInfo = (props) => {
     };
   },[curPrice])
 
+
+  //TODO: Maybe make loading a provider, or rethink this
   return(
     <>
       <Title>
@@ -98,13 +103,20 @@ const CryptoInfo = (props) => {
         <Symbol> {cryptoData.symbol} </Symbol> 
         {props.coin} 
       </Title> 
-      <CurPrice>${curPrice}</CurPrice>
+      <CurPrice>
+      <NumberFormat value={curPrice} displayType={'text'} thousandSeparator={true} prefix={'$'} />
+        <BeatLoader
+          size={10}
+          color={"white"}
+          loading={loading}
+        />
+      </CurPrice>
       <InfoFrame>
-        <InfoItem title="24H CHANGE" price={cryptoData.change_24.value} percent={cryptoData.change_24.percent}  split="|"/>
-        <InfoItem title="24H HIGH" price={cryptoData.change_24.high} />
-        <InfoItem title="24H LOW" price={cryptoData.change_24.low} />
-        <InfoItem title="ALL TIME HIGH" price={cryptoData.ath} />
-        <InfoItem title="MARKET CAP" price={cryptoData.cap} />
+        <InfoItem loading={loading} title="24H CHANGE" price={cryptoData.change_24.value} percent={cryptoData.change_24.percent}  split="|"/>
+        <InfoItem loading={loading} title="24H HIGH" price={cryptoData.change_24.high} />
+        <InfoItem loading={loading} title="24H LOW" price={cryptoData.change_24.low} />
+        <InfoItem loading={loading} title="ALL TIME HIGH" price={cryptoData.ath} />
+        <InfoItem loading={loading} title="MARKET CAP" price={cryptoData.cap} />
       </InfoFrame>
     </>
   )

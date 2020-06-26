@@ -1,7 +1,5 @@
 import React, {useState,useEffect} from 'react';
 import './App.css';
-import Select from 'react-select';
-import axios from 'axios';
 
 import list from './components/CoinList.json';
 
@@ -9,6 +7,7 @@ import Card from './components/Card';
 import CryptoPanel from './components/CryptoPanel';
 import AddAddress from './components/AddAddress';
 import AddCoin from './components/AddCoin';
+import QuickNav from './components/QuickNav';
 
 
 const defaultTracker = {
@@ -47,6 +46,7 @@ const App = () => {
 
   // TODO: Clean these up; Merge into one function 
   const addTracker = (type,value) => {
+    if (!value || value === "") return;
     const tmp = {value:value,hidden:false};
     setCoinSel(null);
     if (type === "coins"){
@@ -59,7 +59,7 @@ const App = () => {
   }
 
   const addAddress = (address) => {
-    console.log(address);
+    if (!address || address === "") return;
     let tmp = {value:address,hidden:false};
     localStorage.setItem(localStores.wallet,JSON.stringify([...wallets,tmp]));
     return setWallets([...wallets,tmp]);
@@ -120,6 +120,7 @@ const App = () => {
   //TODO: Clean the AddAddress/AddCoin components up
   return (
     <div className="App">
+    <QuickNav coins={coins} wallets={wallets} />
       <div className="Content">
         <div className="Navigation">
           <div className="item">

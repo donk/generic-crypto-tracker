@@ -49,7 +49,9 @@ const CryptoChart = (props) => {
     <div className={`collapsable ${props.collapsed ? '' : 'collapsed' }`}>
       <LineChart prefix="$" thousands="," 
         data={chartData} min={null} height={150}  
-        round={4} dataset={chartOpts}/>
+        round={4} zeros={true} dataset={chartOpts}
+        
+        />
     </div>
   )
 }

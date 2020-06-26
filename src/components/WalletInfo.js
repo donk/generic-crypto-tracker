@@ -61,6 +61,8 @@ const WalletInfo = (props) => {
   const [transactions,setTransactions] = useState([]);
   const [totalCoins,setTotalCoins] = useState(0);
   const [usdTotal,setUsdTotal] = useState(0);
+  const [invalid,setInvalid] = useState(false);
+  const [loading,setLoading] = useState(true);
 
   const getTotals = (addresses) => {
     let total = 0;
@@ -80,9 +82,15 @@ const WalletInfo = (props) => {
     setAddresses(props.wallet.split('|'));
     axios.get(`http://localhost:3001/wallet/${props.wallet}?confirmations=6`)
     .then((result) => {
-      console.log(result.data);
-      getTotals(result.data.addresses);
-      setTransactions(result.data.txs);
+      if (!result.data.error){
+        getTotals(result.data.addresses);
+        setTransactions(result.data.txs);
+        setLoading(false);
+      }else{
+        //Bitcoin address is invalid
+        console.log('invalid');
+        setInvalid(true);
+      }
     }).catch((e) => {
       console.log(e.message);
     })
@@ -91,21 +99,27 @@ const WalletInfo = (props) => {
   return(
     <>
       <Title>
-        BITCOIN ADDRESS
+        <span style={{color:invalid ? 'red' : ''}}>
+          BITCOIN ADDRESS {invalid ? '- INVALID' : ''}
+        </span>
         <div>
           {addresses.map((address) => {
             return <div key={address}>{address}</div>
           })}
         </div>
       </Title>
-      <Flexxy>
-        <OverviewCard title="BITCOIN HELD" value={totalCoins} />
-        <OverviewCard title="USD VALUE">
-        <NumberFormat fixedDecimalScale={true} value={usdTotal} displayType={'text'} thousandSeparator={true} prefix={'$'} />
-        </OverviewCard>
-      </Flexxy>
-      {props.children}
-      <WalletHistory collapsed={props.collapsed} transactions={transactions} addresses={addresses}/>
+      {!invalid && 
+        <>
+          <Flexxy>
+            <OverviewCard title="BITCOIN HELD" value={totalCoins} />
+            <OverviewCard title="USD VALUE">
+            <NumberFormat fixedDecimalScale={true} value={usdTotal} displayType={'text'} thousandSeparator={true} prefix={'$'} />
+            </OverviewCard>
+          </Flexxy>
+          {props.children}
+          <WalletHistory collapsed={props.collapsed} transactions={transactions} addresses={addresses}/>
+        </>
+      }
     </>
   )
 }

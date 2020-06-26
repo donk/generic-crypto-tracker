@@ -15,7 +15,11 @@ app.get('/wallet/:address', (req,res) => {
     .then((result) => {
       //console.log(result.data);
       res.json(result.data);
-    }).catch((e) => {
-      console.log(e.message);
+    }).catch((error) => {
+      if (error.response.data === "Invalid Bitcoin Address"){
+        res.json({error:true});
+      }else{
+        console.log(error.message)
+      }
     })
 });
