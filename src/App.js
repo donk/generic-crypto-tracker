@@ -49,7 +49,7 @@ const updateArray = (arr, item, index) => {
 const App = () => {
   const [coins, setCoins] = useLocalStorage(localStores.coin, DEFAULTS.coins);
   const [wallets, setWallets] = useLocalStorage(localStores.wallet, DEFAULTS.wallets);
-  const [allCoins, setAllCoins] = useLocalStorage(localStores.all, null);
+  const [allCoins, setAllCoins] = useLocalStorage(localStores.all);
   const [selectedCoin, setSelectedCoin] = useState(''); // Try and use the full name here ex: selectedCoin, setSelectedCoin
 
   // TODO: Clean these up; Merge into one function
@@ -72,13 +72,6 @@ const App = () => {
   };
 
   const updateCollapse = (type, index) => {
-    // This lil bit would be bad news
-    // setting temp directly to coins/wallets means where
-    // you're changing hidden would modify the state value as well
-    // since it's a direct reference
-    // Avoid this -> const thing = existingObjectOrArray
-    // Do this -> const thing = { ...existingObject }; or const thing = [...existingArray]
-
     if (type === 'coins') {
       const update = updateArray(coins, { hidden: !coins[index].hidden }, index);
       return setCoins(update);
@@ -87,9 +80,6 @@ const App = () => {
       return setWallets(update);
     }
   };
-
-  // You can probably not have this at all since you're just calling it directly
-
 
   const removeCard = (type, index) => {
     // Same issue here with x = objOrArr

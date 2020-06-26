@@ -60,7 +60,7 @@ const WalletInfo = props => {
   const [usdTotal, setUsdTotal] = useState(0);
   const [invalid, setInvalid] = useState(false);
   const [loading, setLoading] = useState(true);
-  console.log(loading, 'loading'); // Why I here
+  console.log(loading, 'loading'); // Why I her
 
   const getTotals = async addresses => {
     try {
@@ -78,21 +78,24 @@ const WalletInfo = props => {
   };
 
   useEffect(() => {
+    let mounted = true;
     const fetchData = async () => {
       try {
         setAddresses(props.wallet.split('|'));
         const { data } = await axios.get(`http://localhost:3001/wallet/${props.wallet}?confirmations=6`);
         if (data.error) throw Error(data.error);
-
+        if (!mounted) return;
         getTotals(data.addresses);
         setTransactions(data.txs);
         setLoading(false);
       } catch (e) {
+        if (!mounted) return;
         console.log('invalid', e.message);
         setInvalid(true);
       }
     };
     fetchData();
+    return () => mounted = false;
   }, [props.wallet]);
 
   return (

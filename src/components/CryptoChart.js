@@ -16,7 +16,9 @@ const CHART_OPTIONS = {
 
 const CryptoChart = props => {
   const [chartData, setChartData] = useState({});
-  const [delay, setDelay] = useState(1000);
+  const [delay, setDelay] = useState(2000);
+
+  let mounted = true;
 
   // Async/Await
   const tick = useCallback(async () => {
@@ -33,9 +35,10 @@ const CryptoChart = props => {
           price[0] = moment(price[0]).toDate();
           return price;
         });
-
+      if (!mounted) return;
       setChartData(formatted);
     } catch (e) {
+      if (!mounted) return;
       console.log(e.message);
       setDelay(15000);
     }
@@ -45,6 +48,7 @@ const CryptoChart = props => {
     tick();
     const timer = setTimeout(tick, delay);
     return () => {
+      mounted = false;
       clearTimeout(timer);
     };
   }, [chartData, delay, tick]);

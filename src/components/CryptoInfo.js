@@ -55,6 +55,8 @@ const CryptoInfo = props => {
   const [delay, setDelay] = useState(60000);
   const [loading, setLoading] = useState(true);
 
+  let mounted = true;
+
   const tick = useCallback(async () => {
     try {
       console.log('tick!', props.coin);
@@ -84,11 +86,12 @@ const CryptoInfo = props => {
         cur_price: formatCurrency(market_data.current_price.usd),
         symbol,
       };
-
+      if (!mounted) return;
       setCryptoData(formattedInfo);
       setCurPrice(formattedInfo.cur_price);
       setLoading(false);
     } catch (e) {
+      if (!mounted) return;
       console.log(e.message);
       setDelay(100000);
     }
@@ -98,6 +101,7 @@ const CryptoInfo = props => {
     tick();
     const timer = setInterval(tick, delay);
     return () => {
+      mounted = false;
       clearInterval(timer);
     };
   }, [curPrice, delay, tick]);
