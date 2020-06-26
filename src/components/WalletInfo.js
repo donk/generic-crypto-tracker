@@ -91,7 +91,7 @@ const WalletInfo = (props) => {
   return(
     <>
       <Title>
-        BITCOIN WALLET
+        BITCOIN ADDRESS
         <div>
           {addresses.map((address) => {
             return <div key={address}>{address}</div>

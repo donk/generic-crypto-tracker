@@ -9,7 +9,6 @@ const CardContainer = styled.div`
   position:relative;
   margin:10px;
   box-shadow:2px 2px 10px rgba(0,0,0,0.3);
-  cursor:pointer;
 `;
 
 const Card = (props) => {

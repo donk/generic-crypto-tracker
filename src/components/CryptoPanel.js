@@ -17,8 +17,23 @@ const Expand = styled.div`
   border-radius:4px;
   transition:background-color 0.4s;
   color:rgba(255,255,255,0.6);
+  cursor:pointer;
   :hover{
     background-color:rgba(0,0,0,0.3);
+  }
+`;
+
+const Delete = styled.div`
+  text-align:right;
+  font-size:0.8em;
+  div{
+    display:inline-block;
+    color:rgba(200,100,100,1);
+    cursor:pointer;
+    transition:color 0.3s;
+    :hover{
+      color:rgba(255,50,50,1);
+    }
   }
 `;
 
@@ -30,11 +45,15 @@ const CryptoCard = (props) => {
     setCollapsed(!collapsed);
   }
 
+  const deleteClick = () => {
+    props.deleteCard();
+  }
+
   return(
     <div>
       { props.coin &&
         <>
-          <CryptoInfo  coin={props.coin}/>
+          <CryptoInfo coin={props.coin}/>
           <div>
             <Expand onClick={doClick}>
               {collapsed ? 'Hide Chart' : 'Show Chart'}
@@ -54,7 +73,7 @@ const CryptoCard = (props) => {
           </WalletInfo>
         </>
       }
-      
+      <Delete><div onClick={deleteClick}>REMOVE</div></Delete>
     </div>
   )
 }

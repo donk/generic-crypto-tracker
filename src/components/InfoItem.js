@@ -4,7 +4,7 @@ import NumberFormat from 'react-number-format';
 
   const Info = styled.div`
     text-align:center;
-    font-size:0.9em;
+    font-size:1em;
     margin:5px 10px;
     .title{
       font-size:0.7em;

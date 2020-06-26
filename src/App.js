@@ -7,6 +7,8 @@ import list from './components/CoinList.json';
 
 import Card from './components/Card';
 import CryptoPanel from './components/CryptoPanel';
+import AddAddress from './components/AddAddress';
+import AddCoin from './components/AddCoin';
 
 
 const defaultTracker = {
@@ -27,8 +29,8 @@ const defaultTracker = {
 }
 
 const localStores={
-  coin:'coins6',
-  wallet:'wallets6',
+  coin:'coins9',
+  wallet:'wallets9',
   all:'all1'
 }
 
@@ -42,7 +44,9 @@ const App = () => {
   const [coinSel,setCoinSel] = useState('');
   const [allCoins,setAllCoins] = useState(locala || null)
 
-  let addTracker = (type,value) => {
+
+  // TODO: Clean these up; Merge into one function 
+  const addTracker = (type,value) => {
     const tmp = {value:value,hidden:false};
     setCoinSel(null);
     if (type === "coins"){
@@ -52,6 +56,13 @@ const App = () => {
       localStorage.setItem(localStores.wallet,JSON.stringify([...wallets,tmp]));
       return setWallets([...wallets,tmp]);
     }
+  }
+
+  const addAddress = (address) => {
+    console.log(address);
+    let tmp = {value:address,hidden:false};
+    localStorage.setItem(localStores.wallet,JSON.stringify([...wallets,tmp]));
+    return setWallets([...wallets,tmp]);
   }
 
   const updateCollapse = (type,id) => {
@@ -70,6 +81,20 @@ const App = () => {
 
   const changeCoin = (value) => {
     setCoinSel(value);
+  }
+
+  const removeCard = (type,id) => {
+    if (type === "coins"){
+      let tmp = coins;
+      tmp.splice(id,1);
+      localStorage.setItem(localStores.coin,JSON.stringify(tmp));
+      return setCoins([...tmp]);
+    }else{
+      let tmp = wallets;
+      tmp.splice(id,1);
+      localStorage.setItem(localStores.wallet,JSON.stringify(tmp));
+      return setWallets([...tmp]);
+    }
   }
 
 
@@ -91,25 +116,34 @@ const App = () => {
     }*/
   },[]);
 
+
+  //TODO: Clean the AddAddress/AddCoin components up
   return (
     <div className="App">
       <div className="Content">
         <div className="Navigation">
           <div className="item">
-            <div className="flexxy">
-              <Select options={allCoins} onChange={changeCoin} value={coinSel} placeholder="Select Coin" />
-              <button onClick={()=>addTracker('coins',coinSel.value)}>Track Coin</button>
-            </div>
+            <AddCoin 
+              coinSel={coinSel} 
+              changeCoin={changeCoin} 
+              addTracker={addTracker}
+              allCoins={allCoins}
+            />
           </div>
           <div className="item">
-            Area for adding wallets
+            <AddAddress addAddress={addAddress}/>
           </div>
         </div>
         <div className="Cards">
           {coins.map((v,i) => {
             return(
             <Card key={v.value}>
-              <CryptoPanel toggleCollapse={()=>updateCollapse('coins',i)} hidden={v.hidden} coin={v.value} />
+              <CryptoPanel
+                toggleCollapse={()=>updateCollapse('coins',i)}
+                deleteCard={()=>{removeCard('coins',i)}}
+                hidden={v.hidden} 
+                coin={v.value} 
+              />
             </Card>
             )
           })}
@@ -117,10 +151,19 @@ const App = () => {
           {wallets.map((v,i) => {
             return(
             <Card key={v.value}>
-              <CryptoPanel toggleCollapse={()=>updateCollapse('wallets',i)} hidden={v.hidden} wallet={v.value} />
+              <CryptoPanel
+                toggleCollapse={()=>updateCollapse('wallets',i)}
+                deleteCard={()=>{removeCard('wallets',i)}}
+                hidden={v.hidden} 
+                wallet={v.value} 
+              />
             </Card>
             )
           })}
+
+          {!coins.length && !wallets.length && 
+            <h1 style={{color:'rgba(205,235,255,0.6)',textAlign:'center'}}>Add a tracker or wallet above!</h1>
+          }
         </div>
       </div>
     </div>

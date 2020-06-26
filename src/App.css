@@ -3,7 +3,7 @@ body{
 }
 
 .App {
-  font-family:Arial;
+  font-family: 'Assistant', Arial;
   padding:20px;
 }
 
@@ -22,14 +22,30 @@ body{
   margin:20px;
 }
 
-.Navigation .item .flexxy div:first-child{
-  width:100%;
+.item button{
+  background-color:transparent;
+  color:rgba(100,100,160,1);
+  border:rgba(100,100,160,1) 2px solid;
+  margin-left:10px;
+  padding:5px;
+  cursor:pointer;
+  transition:background-color 0.2s;
+}
+.item button:hover{
+  background-color:rgba(100,100,160,0.3);
 }
 
 .flexxy{
   display:flex;
 }
 
+.label{
+  font-size:1.75em;
+  font-weight:100;
+  color:rgba(100,100,160,1);
+  text-transform:uppercase;
+  margin-bottom:10px;
+}
 
 .collapsable{
   transition:max-height 0.5s;
@@ -45,3 +61,44 @@ body{
   cursor:crosshair;
 }
 
+.select{
+  flex-grow:1;
+}
+
+.select .select__control, .item .addr input{
+  background-color:transparent;
+  border:none;
+  border-bottom:rgba(100,100,160,0.6) 1px solid !important;
+  border-radius:0;
+  color:rgba(100,100,160,1);
+}
+
+.select .select__control--is-focused{
+  box-shadow:none !important;
+  border:none;
+}
+
+.select .select__indicator-separator{
+  background-color:rgba(100,100,160,0.6);
+}
+
+.select .select__indicator{
+  color:rgba(100,100,160,0.6);
+}
+
+.select .select__menu{
+  background-color:rgba(42,42,42,0.95);
+  color:white;
+}
+
+.select .select__option--is-focused{
+  background-color:rgba(100,100,160,0.6);
+}
+
+.select .select__single-value{
+  color:rgba(100,100,160,1);
+}
+
+.select .select__input{
+  color:rgba(100,100,160,0.6);
+}
