@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState, useRef } from 'react';
 import 'chart.js';
 import { LineChart } from 'react-chartkick';
 import axios from 'axios';
@@ -16,7 +16,9 @@ const CHART_OPTIONS = {
 
 const CryptoChart = props => {
   const [chartData, setChartData] = useState({});
-  const [delay, setDelay] = useState(1000);
+  const [delay, setDelay] = useState(2000);
+
+  const mounted = useRef(true);
 
   // Async/Await
   const tick = useCallback(async () => {
@@ -33,11 +35,12 @@ const CryptoChart = props => {
           price[0] = moment(price[0]).toDate();
           return price;
         });
-
+      if (!mounted.current) return;
       setChartData(formatted);
     } catch (e) {
+      if (!mounted.current) return;
       console.log(e.message);
-      setDelay(5000);
+      setDelay(15000);
     }
   }, [props.coin]);
 
@@ -45,12 +48,13 @@ const CryptoChart = props => {
     tick();
     const timer = setTimeout(tick, delay);
     return () => {
+      mounted.current = false;
       clearTimeout(timer);
     };
   }, [chartData, delay, tick]);
 
   return (
-    <div className={`collapsable ${props.collapsed ? '' : 'collapsed'}`}>
+    <div className={`collapsable ${props.collapsed ? 'collapsed' : ''}`}>
       <LineChart
         prefix="$"
         thousands=","

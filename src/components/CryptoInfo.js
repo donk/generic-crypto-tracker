@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import styled from 'styled-components';
 import BeatLoader from 'react-spinners/BeatLoader';
@@ -52,8 +52,11 @@ const formatCurrency = num => {
 const CryptoInfo = props => {
   const [curPrice, setCurPrice] = useState('');
   const [cryptoData, setCryptoData] = useState({ change_24: {} });
-  const [delay, setDelay] = useState(60000);
   const [loading, setLoading] = useState(true);
+
+  const refreshInterval = 30000;
+
+  const mounted = useRef(true);
 
   const tick = useCallback(async () => {
     try {
@@ -84,23 +87,24 @@ const CryptoInfo = props => {
         cur_price: formatCurrency(market_data.current_price.usd),
         symbol,
       };
-
+      if (!mounted.current) return;
       setCryptoData(formattedInfo);
       setCurPrice(formattedInfo.cur_price);
       setLoading(false);
     } catch (e) {
+      if (!mounted.current) return;
       console.log(e.message);
-      setDelay(100000);
     }
   }, [props.coin]);
 
   useEffect(() => {
     tick();
-    const timer = setInterval(tick, delay);
+    const timer = setInterval(tick, refreshInterval);
     return () => {
+      mounted.current = false;
       clearInterval(timer);
     };
-  }, [curPrice, delay, tick]);
+  }, [tick]);
 
   //TODO: Maybe make loading a provider, or rethink this
   return (

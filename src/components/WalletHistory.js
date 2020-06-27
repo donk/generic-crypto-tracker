@@ -34,7 +34,6 @@ const AddressLink = props => {
 const HistoryItem = props => {
   const [fromTotal, setFromTotal] = useState(0);
   const [toTotal, setToTotal] = useState(0);
-  console.log('toTotal', toTotal); // Whats this for if not used?
 
   const time = moment(props.tx.time * 1000).format('MMM Mo YYYY h:mm:ss a');
 
@@ -92,7 +91,7 @@ const HistoryItem = props => {
 const WalletHistory = props => (
   <div
     style={{ maxHeight: '400px', overflowY: 'auto', marginTop: '15px' }}
-    className={`collapsable ${props.collapsed ? '' : 'collapsed'}`}
+    className={`collapsable ${props.collapsed ? 'collapsed' : ''}`}
   >
     <Transactions>
       {props.transactions.map((tx, i) => (
