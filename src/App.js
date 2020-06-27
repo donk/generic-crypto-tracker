@@ -108,7 +108,7 @@ const App = () => {
           console.log(e.message);
         })
     }*/
-  }, []);
+  }, [setAllCoins]);
 
 
   //TODO: Clean the AddAddress/AddCoin components up

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState, useRef } from 'react';
 import 'chart.js';
 import { LineChart } from 'react-chartkick';
 import axios from 'axios';
@@ -18,7 +18,7 @@ const CryptoChart = props => {
   const [chartData, setChartData] = useState({});
   const [delay, setDelay] = useState(2000);
 
-  let mounted = true;
+  const mounted = useRef(true);
 
   // Async/Await
   const tick = useCallback(async () => {
@@ -35,10 +35,10 @@ const CryptoChart = props => {
           price[0] = moment(price[0]).toDate();
           return price;
         });
-      if (!mounted) return;
+      if (!mounted.current) return;
       setChartData(formatted);
     } catch (e) {
-      if (!mounted) return;
+      if (!mounted.current) return;
       console.log(e.message);
       setDelay(15000);
     }
@@ -48,7 +48,7 @@ const CryptoChart = props => {
     tick();
     const timer = setTimeout(tick, delay);
     return () => {
-      mounted = false;
+      mounted.current = false;
       clearTimeout(timer);
     };
   }, [chartData, delay, tick]);

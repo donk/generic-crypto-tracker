@@ -6,7 +6,7 @@ const useLocalStorage = (key, defaultValue) => {
   useEffect(() => {
     let parsedValue = JSON.parse(localStorage.getItem(key));
     setValue(parsedValue || defaultValue);
-  }, [key]);
+  }, [key, defaultValue]);
 
   const updateValue = data => {
     localStorage.setItem(key, JSON.stringify(data));
